@@ -1,4 +1,5 @@
 from pydub import AudioSegment
+from pydub.playback import play
 from sys import argv
 
 soundfile = AudioSegment.from_file(argv[1], format=argv[1].split(".")[1])
@@ -20,6 +21,9 @@ elif argv[2] == "combine":
 elif argv[2] == "reverse":
     print("Audio reversed.")
     export = soundfile.reverse()
+
+elif argv[2] == "play":
+    play(soundfile)
 
 elif argv[2] == "info":
     print("Audio Info:")
