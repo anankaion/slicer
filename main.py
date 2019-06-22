@@ -3,17 +3,18 @@ from pydub.playback import play
 
 from sys import argv
 
+from audio_generation import makenoise
 from audio_generation import makemusic
 from audio_generation import frequency_sweep
 
-is_export = False # flag if export is necessary
-export = AudioSegment.empty() # export audiofile dummy
+is_export = False  # flag if export is necessary
+export = AudioSegment.empty()  # export audiofile dummy
 
 # more than two arguments have to be given
 if len(argv) > 3:
 
     # soundfiles necessary
-    soundfile = AudioSegment.from_file(argv[1], format=argv[1].split(".")[1]) # Input soundfile
+    soundfile = AudioSegment.from_file(argv[1], format=argv[1].split(".")[1])  # Input soundfile
 
     # increase volume
     if argv[2] == "louder":
@@ -56,12 +57,15 @@ if len(argv) > 3:
         print("Length:\t" + str(soundfile.duration_seconds) + " seconds")
 
 # single argument options
-elif len(argv) > 1 :
-    if argv[1] == "makemusic":
-        makemusic()
+elif len(argv) > 1:
+    if argv[1] == "makenoise":
+        makenoise()
 
     elif argv[1] == "sweep":
         frequency_sweep()
+
+    elif argv[1] == "makemusic":
+        makemusic()
 
 # if no operation is given
 else:
@@ -70,5 +74,3 @@ else:
 # if you know audiofile is available, export
 if is_export:
     export.export("export", format=argv[1].split(".")[1])
-
-    
