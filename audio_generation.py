@@ -1,10 +1,12 @@
 from pydub import AudioSegment
-
 from pydub.generators import Sine
 from pydub.generators import Sawtooth
 from pydub.playback import play
 
+import random
+
 VOLUME = -20
+
 NOTES = {
     "C1": 523.25,
     "D": 587.33,
@@ -14,6 +16,17 @@ NOTES = {
     "A": 880.00,
     "B": 987.77,
     "C2": 1046.50
+}
+
+NAMES = {
+    1: "C1",
+    2: "D",
+    3: "E",
+    4: "F",
+    5: "G",
+    6: "A",
+    7: "B",
+    8: "C2"
 }
 
 
@@ -42,16 +55,44 @@ def frequency_sweep():
     play(sweep)
 
 
-def makemusic():
-    piece = AudioSegment.empty()
+def generate_notes():
+    track = AudioSegment.empty()
 
-    print("Welcome to your virtual piano.")
     print("Please enter notes you want to play, separated by a space.")
-    print("(Example: A,B,D,C,D)")
+    print("Available notes: ")
+    print(NOTES.keys())
     notes = input().split(" ")
 
     for note in notes:
         saw = Sawtooth(NOTES.get(note))
-        piece += saw.to_audio_segment(500, VOLUME)
+        track += saw.to_audio_segment(500, VOLUME)
+
+    return track
+
+
+def generate_notes_r():
+    track = AudioSegment.empty()
+
+    for i in range(16):
+        saw = Sawtooth(NOTES.get(NAMES.get(random.randint(1, 8))))
+        track += saw.to_audio_segment(500, VOLUME)
+
+    return track
+
+
+def makemusic(tracks, r):
+    piece = AudioSegment.empty()
+
+    print("Welcome to your virtual piano.")
+
+    if r != "y":
+        piece = generate_notes()
+        for i in range(tracks - 1):
+            piece = piece.overlay(generate_notes())
+
+    else:
+        piece = generate_notes_r()
+        for i in range(tracks - 1):
+            piece = piece.overlay(generate_notes_r())
 
     play(piece)
